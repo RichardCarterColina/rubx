@@ -10,7 +10,32 @@
 	</head>
 
 	<body>
-		<canvas id="screen"></canvas>
+		<div id="container">
+			<button id="reverse" class="overlay">Reverse Motions</button>
+			<div id="hud-container" class="overlay">
+				<div class="grid-item">
+					<button class="button U">U</button>
+					<button class="button D">D</button>
+					<button class="button L">L</button>
+					<button class="button R">R</button>
+					<button class="button F">F</button>
+					<button class="button B">B</button>
+				</div>
+
+				<div class="grid-item">
+					<button class="button U'">U'</button>
+					<button class="button D'">D'</button>
+					<button class="button L'">L'</button>
+					<button class="button R'">R'</button>
+					<button class="button F'">F'</button>
+					<button class="button B'">B'</button>
+				</div>
+			</div>
+
+			<textarea class="overlay" id="history" rows="5" readonly></textarea>
+
+			<canvas id="screen"></canvas>
+		</div>
 
 		<script src="src/main.js" type="module"></script>
 	</body>

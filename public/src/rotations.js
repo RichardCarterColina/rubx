@@ -1,12 +1,9 @@
 // rotations.js
 import { getIndex } from './cube.js';
 
-// Z rotations
 function rotateCubieZ(cubie) {
 	const newColors = { ...cubie.colors };
 
-	// FRONT: no change
-	// BACK: no change
 	newColors.TOP = cubie.colors.LEFT;
 	newColors.RIGHT = cubie.colors.TOP;
 	newColors.BOTTOM = cubie.colors.RIGHT;
@@ -32,7 +29,6 @@ function rotateCubeFaceZ(cube, layer, reverse) {
 
 				newCubies[newIndex] = cube.cubies[oldIndex];
 				
-				// We need to actually ROTATE the CUBIE
 				newCubies[newIndex].colors = rotateCubieZ(newCubies[newIndex]);
 			}
 		}
@@ -41,12 +37,9 @@ function rotateCubeFaceZ(cube, layer, reverse) {
 	}
 }
 
-// Y rotations
 function rotateCubieY(cubie) {
 	const newColors = { ...cubie.colors };
 
-	// TOP: no change
-	// BOTTOM: no change
 	newColors.FRONT = cubie.colors.RIGHT;
 	newColors.LEFT = cubie.colors.FRONT;
 	newColors.BACK = cubie.colors.LEFT;
@@ -62,17 +55,11 @@ function rotateCubeFaceY(cube, layer, reverse) {
 		
 		for(let z = 0; z < 3; ++z) {
 			for(let x = 0; x < 3; ++x) {
-
-				// Rotate clockwise
-				// First transpose
-				// Then reverse rows
-
 				const oldIndex = getIndex(x, layer, 2 - z);
 				const newIndex = getIndex(2 - z, layer, 2 - x);
 
 				newCubies[newIndex] = cube.cubies[oldIndex];
 				
-				// We need to actually ROTATE the CUBIE
 				newCubies[newIndex].colors = rotateCubieY(newCubies[newIndex]);
 			}
 		}
@@ -81,12 +68,9 @@ function rotateCubeFaceY(cube, layer, reverse) {
 	}
 }
 
-// X rotations
 function rotateCubieX(cubie) {
 	const newColors = { ...cubie.colors };
 
-	// LEFT: no change
-	// RIGHT: no change
 	newColors.FRONT = cubie.colors.TOP;
 	newColors.BOTTOM = cubie.colors.FRONT;
 	newColors.BACK = cubie.colors.BOTTOM;
@@ -102,17 +86,11 @@ function rotateCubeFaceX(cube, layer, reverse) {
 		
 		for(let y = 0; y < 3; ++y) {
 			for(let z = 0; z < 3; ++z) {
-
-				// Rotate clockwise
-				// First transpose
-				// Then reverse rows
-
 				const oldIndex = getIndex(layer, y, 2 - z);
 				const newIndex = getIndex(layer, z, y);
 
 				newCubies[newIndex] = cube.cubies[oldIndex];
 				
-				// We need to actually ROTATE the CUBIE
 				newCubies[newIndex].colors = rotateCubieX(newCubies[newIndex]);
 			}
 		}
@@ -124,6 +102,8 @@ function rotateCubeFaceX(cube, layer, reverse) {
 function applyRotation(cube, rotation) {
 	const reversed = (rotation.length == 2);
 
+	cube.pastRotations.push(rotation);
+
 	switch(rotation[0]) {
 		case "F": rotateCubeFaceZ(cube, 0, reversed); break; 
 		case "B": rotateCubeFaceZ(cube, 2, !reversed); break;  
@@ -131,12 +111,37 @@ function applyRotation(cube, rotation) {
 		case "R": rotateCubeFaceX(cube, 2, !reversed); break;  
 		case "U": rotateCubeFaceY(cube, 0, reversed); break;  
 		case "D": rotateCubeFaceY(cube, 2, !reversed); break; 
-		default: console.log(`Rotation '${rotation}' not recognized.`); break;
+		default: {
+			cube.pastRotations.pop();
+			console.log(`Rotation '${rotation}' not recognized.`);
+		} break;
 	}
+
+	document.getElementById("history").innerHTML = cube.pastRotations.join();
 }
 
 export function applyRotations(cube, rotationStr) {
 	const rotations = rotationStr.split(" ");
 
 	rotations.forEach(rotation => applyRotation(cube, rotation));
+}
+
+export function reverseCubeHistory(cube) {
+	const arrCopy = [ ...cube.pastRotations ];
+	for(let i = arrCopy.length - 1; i >= 0; --i) {
+		const motion = arrCopy[i];
+		
+		let reverseMotion;
+
+		if(motion.length == 2) {
+			reverseMotion = motion[0];
+		} else {
+			reverseMotion = motion + "'";
+		}
+
+		applyRotation(cube, reverseMotion);
+	}
+
+	cube.pastRotations = [];
+	document.getElementById("history").innerHTML = cube.pastRotations.join();
 }

@@ -1,13 +1,31 @@
 #screen {
-	width: 500px;
-	height: 500px;
-
-	position: absolute;
-	margin: auto;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-
+	width: 100%;
+	height: 100%;
 	border: 1px solid black;
+}
+
+#reverse {
+	border: 1px solid green;
+	margin-top: 70px;
+	margin-left: 5px;
+}
+
+.hud-container {
+	display: grid;
+}
+
+.button {
+	border: 1px solid red;
+	width: 25px;
+	height: 25px;
+	margin: 5px 5px 5px 5px;
+}
+
+.overlay {
+	position: absolute;
+}
+
+textarea {
+	margin-top: 95px;
+	margin-left: 5px;
 }

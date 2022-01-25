@@ -1,7 +1,7 @@
 // rendering.js
 import { getIndex } from './cube.js'; 
 
-const defaultFaceArray = ['FRONT', 'TOP', 'LEFT', 'RIGHT', 'BOTTOM', 'BACK'];
+const DEFAULT_FACE_ARRAY = ['FRONT', 'TOP', 'LEFT', 'RIGHT', 'BOTTOM', 'BACK'];
 
 function shouldDrawCubieFace(x, y, z, face) {
 	switch(face) {
@@ -26,8 +26,10 @@ function shouldDrawCubieFace(x, y, z, face) {
 	}
 }
 
-function getDrawPosition(x_p, y_p, z_p, face) {
-	let x = 0, y = 0;
+function getDrawPosition(x_p, y_p, z_p, face, width, height) {
+	let x = Math.floor((width - 32 * 9) / 2);
+	let y = Math.floor((height - 32 * 12) / 2);
+
 	const dx = x_p * 32, dy = y_p * 32, dz = z_p * 32;
 	const r_dx = (2 - x_p) * 32, r_dy = (2 - y_p) * 32, r_dz = (2 - z_p) * 32;
 	const fS = 32 * 3;
@@ -72,10 +74,16 @@ export function drawCube(context, cube) {
 				const index = getIndex(x_p, y_p, z_p);
 
 				for(let i = 0; i < 6; ++i) {
-					const face = defaultFaceArray[i];
+					const face = DEFAULT_FACE_ARRAY[i];
 					if(!shouldDrawCubieFace(x_p, y_p, z_p, face)) continue;
 
-					const { x, y } = getDrawPosition(x_p, y_p, z_p, face);
+					const { x, y } = getDrawPosition(
+						x_p, y_p, z_p,
+						face,
+						context.canvas.width,
+						context.canvas.height
+					);
+
 					context.beginPath();
 
 					context.fillStyle = cube.cubies[index].colors[face];
@@ -83,10 +91,6 @@ export function drawCube(context, cube) {
 				
 					context.strokeStyle = 'black';
 					context.strokeRect(x, y, 32, 32);
-
-					context.fillStyle = 'black';
-					context.font = 'normal 10px sans-serif';
-					context.fillText(index, x + 5, y + 17);
 
 					context.fill();
 					context.stroke();

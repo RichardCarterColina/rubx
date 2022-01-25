@@ -1,32 +1,16 @@
 // cube.js
 
 /*
- *      WHITE
- * RED  BLUE ORANGE
- *      YELLOW
- *      GREEN
+ *     WHITE
+ * RED BLUE   ORANGE
+ *     YELLOW
+ *     GREEN
  *
- *  BLUE is main face
+ *  BLUE is the main face
  */
-
 
 export function getIndex(x, y, z) {
 	return 100 * x + 10 * y + z + 9000;
-}
-
-function getPosition(index) { // Never used
-	const z = index - Math.floor(index / 10) * 10;
-	index = Math.floor(index / 10);
-	const y = index - Math.floor(index / 10) * 10;
-	index = Math.floor(index / 10);
-	const x = index - Math.floor(index / 10) * 10;
-	index = Math.floor(index / 10);
-
-	return {
-		x,
-		y,
-		z
-	}
 }
 
 export function defaultCubieColors() {
@@ -64,6 +48,7 @@ class Cubie {
 
 export class Cube {
 	constructor() {
+		this.pastRotations = [];
 		this.cubies = {};
 
 		for(let z = 0; z < 3; ++z) {
